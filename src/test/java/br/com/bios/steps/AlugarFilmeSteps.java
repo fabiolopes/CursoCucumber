@@ -12,6 +12,7 @@ import br.com.bios.entidades.NotaAluguel;
 import br.com.bios.entidades.TipoAluguel;
 import br.com.bios.servicos.AluguelService;
 import br.com.bios.utils.DateUtils;
+import cucumber.api.DataTable;
 import cucumber.api.java.pt.Dado;
 import cucumber.api.java.pt.Então;
 import cucumber.api.java.pt.Quando;
@@ -22,7 +23,7 @@ public class AlugarFilmeSteps {
 	private AluguelService aluguel = new AluguelService();;
 	private NotaAluguel nota;
 	private String erro;
-	private TipoAluguel tipoAluguel = TipoAluguel.COMUM;
+	private TipoAluguel tipoAluguel;
 	private static final Map<String, TipoAluguel> TIPO_ALUGUEL_MAP;
 	
 	static {
@@ -41,6 +42,16 @@ public class AlugarFilmeSteps {
 	@Dado("^que o preço do aluguel seja R\\$ (\\d+)$")
 	public void queOPreçoDoAluguelSejaR$(int arg1) throws Throwable {
 		filme.setAluguel(arg1);
+	}
+
+	@Dado("^um filme$")
+	public void umFilme(DataTable table) throws Throwable {
+		Map<String, String> map = table.asMap(String.class, String.class);
+		filme = new Filme();
+		filme.setEstoque(Integer.parseInt(map.get("estoque")));
+		filme.setAluguel(Integer.parseInt(map.get("preco")));
+		String tipo = map.get("tipo");
+		tipoAluguel = TIPO_ALUGUEL_MAP.get(tipo);
 	}
 
 	@Quando("^alugar$")
